@@ -34,11 +34,11 @@ object FileUtil {
      * @return Return Empty file to store camera image.
      * @throws IOException if permission denied of failed to create new file.
      */
-    fun getImageFile(fileDir: File, extension: String? = null): File? {
+    fun getImageFile(fileDir: File, fileNamePattern: String?, extension: String? = null): File? {
         try {
             // Create an image file name
             val ext = extension ?: ".jpg"
-            val fileName = getFileName()
+            val fileName = fileNamePattern ?: getFileName()
             val imageFileName = "$fileName$ext"
 
             // Create Directory If not exist
@@ -115,8 +115,8 @@ object FileUtil {
      * @param uri Uri to get Image Size
      * @return Int Image File Size
      */
-    fun getImageSize(context: Context, uri: Uri): Long {
-        return getDocumentFile(context, uri)?.length() ?: 0
+    fun getImageSize(context: Context, fileNamePattern: String?, uri: Uri): Long {
+        return getDocumentFile(context, fileNamePattern, uri)?.length() ?: 0
     }
 
     /**
@@ -153,10 +153,10 @@ object FileUtil {
      * @param uri Source Uri
      * @return DocumentFile return DocumentFile from Uri
      */
-    fun getDocumentFile(context: Context, uri: Uri): DocumentFile? {
+    fun getDocumentFile(context: Context, fileNamePattern: String?, uri: Uri): DocumentFile? {
         var file: DocumentFile? = null
         if (isFileUri(uri)) {
-            val path = FileUriUtils.getRealPath(context, uri)
+            val path = FileUriUtils.getRealPath(context, fileNamePattern, uri)
             if (path != null) {
                 file = DocumentFile.fromFile(File(path))
             }

@@ -199,7 +199,7 @@ public class SampleActivity extends AppCompatActivity {
         }
 
         if (uri != null) {
-            startActivity(IntentUtils.getUriViewIntent(this, uri));
+            startActivity(IntentUtils.getUriViewIntent(this, null, uri));
         }
     }
 
@@ -217,7 +217,7 @@ public class SampleActivity extends AppCompatActivity {
 
         new AlertDialog.Builder(this)
                 .setTitle("Image Info")
-                .setMessage(FileUtil.getFileInfo(this, uri))
+                .setMessage(FileUtil.getFileInfo(this, null, uri))
                 .setPositiveButton("Ok", null)
                 .show();
     }

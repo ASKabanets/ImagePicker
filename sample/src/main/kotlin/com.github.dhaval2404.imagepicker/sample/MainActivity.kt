@@ -202,7 +202,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         uri?.let {
-            startActivity(IntentUtils.getUriViewIntent(this, uri))
+            startActivity(IntentUtils.getUriViewIntent(this, fileNamePattern = null, uri))
         }
     }
 
@@ -216,7 +216,7 @@ class MainActivity : AppCompatActivity() {
 
         AlertDialog.Builder(this)
             .setTitle("Image Info")
-            .setMessage(FileUtil.getFileInfo(this, uri))
+            .setMessage(FileUtil.getFileInfo(this, fileNamePattern = null, uri))
             .setPositiveButton("Ok", null)
             .show()
     }

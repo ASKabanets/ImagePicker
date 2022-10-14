@@ -30,6 +30,7 @@ class CompressionProvider(activity: ImagePickerActivity) : BaseProvider(activity
     private val mMaxFileSize: Long
 
     private val mFileDir: File
+    private var  fileNamePattern: String? = null
 
     init {
         val bundle = activity.intent.extras ?: Bundle()
@@ -43,6 +44,7 @@ class CompressionProvider(activity: ImagePickerActivity) : BaseProvider(activity
 
         // Get File Directory
         val fileDir = bundle.getString(ImagePicker.EXTRA_SAVE_DIRECTORY)
+        fileNamePattern = bundle.getString(ImagePicker.EXTRA_FILE_NAME_PATTERN)
         mFileDir = getFileDir(fileDir)
     }
 
@@ -88,7 +90,7 @@ class CompressionProvider(activity: ImagePickerActivity) : BaseProvider(activity
     }
 
     private fun getSizeDiff(uri: Uri): Long {
-        val length = FileUtil.getImageSize(this, uri)
+        val length = FileUtil.getImageSize(this, fileNamePattern, uri)
         return length - mMaxFileSize
     }
 
@@ -195,7 +197,11 @@ class CompressionProvider(activity: ImagePickerActivity) : BaseProvider(activity
         }
 
         val extension = FileUtil.getImageExtension(file)
-        val compressFile: File? = FileUtil.getImageFile(fileDir = mFileDir, extension = extension)
+        val compressFile: File? = FileUtil.getImageFile(
+            fileDir = mFileDir,
+            fileNamePattern = fileNamePattern,
+            extension = extension
+        )
         return if (compressFile != null) {
             ImageUtil.compressImage(
                 file, maxWidth.toFloat(), maxHeight.toFloat(),
@@ -234,6 +240,6 @@ class CompressionProvider(activity: ImagePickerActivity) : BaseProvider(activity
      * This method will be called when final result fot this provider is enabled.
      */
     private fun handleResult(file: File) {
-        activity.setCompressedImage(Uri.fromFile(file))
+        activity.setCompressedImage(Uri.fromFile(file), fileNamePattern)
     }
 }

@@ -25,12 +25,17 @@ class GalleryProvider(activity: ImagePickerActivity) :
 
     // Mime types restrictions for gallery. By default all mime types are valid
     private val mimeTypes: Array<String>
+    /**
+     * Custom file name pattern
+     * */
+    private var  fileNamePattern: String? = null
 
     init {
         val bundle = activity.intent.extras ?: Bundle()
 
         // Get MIME types
         mimeTypes = bundle.getStringArray(ImagePicker.EXTRA_MIME_TYPES) ?: emptyArray()
+        fileNamePattern = bundle.getString(ImagePicker.EXTRA_FILE_NAME_PATTERN)
     }
 
     /**
@@ -72,7 +77,7 @@ class GalleryProvider(activity: ImagePickerActivity) :
         val uri = data?.data
         if (uri != null) {
             takePersistableUriPermission(uri)
-            activity.setImage(uri)
+            activity.setImage(uri, fileNamePattern)
         } else {
             setError(R.string.error_failed_pick_gallery_image)
         }

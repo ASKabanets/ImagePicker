@@ -51,11 +51,17 @@ class CameraProvider(activity: ImagePickerActivity) : BaseProvider(activity) {
      */
     private val mFileDir: File
 
+    /**
+     * Custom file name pattern
+     * */
+    private var  fileNamePattern: String? = null
+
     init {
         val bundle = activity.intent.extras ?: Bundle()
 
         // Get File Directory
         val fileDir = bundle.getString(ImagePicker.EXTRA_SAVE_DIRECTORY)
+        fileNamePattern = bundle.getString(ImagePicker.EXTRA_FILE_NAME_PATTERN)
         mFileDir = getFileDir(fileDir)
     }
 
@@ -118,7 +124,7 @@ class CameraProvider(activity: ImagePickerActivity) : BaseProvider(activity) {
      */
     private fun startCameraIntent() {
         // Create and get empty file to store capture image content
-        val file = FileUtil.getImageFile(fileDir = mFileDir)
+        val file = FileUtil.getImageFile(fileDir = mFileDir, fileNamePattern = fileNamePattern)
         mCameraFile = file
 
         // Check if file exists
@@ -202,7 +208,7 @@ class CameraProvider(activity: ImagePickerActivity) : BaseProvider(activity) {
      * This method will be called when final result fot this provider is enabled.
      */
     private fun handleResult() {
-        activity.setImage(Uri.fromFile(mCameraFile))
+        activity.setImage(Uri.fromFile(mCameraFile), fileNamePattern)
     }
 
     /**

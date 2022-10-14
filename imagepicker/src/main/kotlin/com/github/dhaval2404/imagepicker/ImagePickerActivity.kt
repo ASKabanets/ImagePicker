@@ -123,11 +123,11 @@ class ImagePickerActivity : AppCompatActivity() {
      *
      * @param uri Capture/Gallery image Uri
      */
-    fun setImage(uri: Uri) {
+    fun setImage(uri: Uri, fileNamePattern: String?) {
         when {
             mCropProvider.isCropEnabled() -> mCropProvider.startIntent(uri)
             mCompressionProvider.isCompressionRequired(uri) -> mCompressionProvider.compress(uri)
-            else -> setResult(uri)
+            else -> setResult(uri, fileNamePattern)
         }
     }
 
@@ -138,7 +138,7 @@ class ImagePickerActivity : AppCompatActivity() {
      *
      * @param uri Crop image uri
      */
-    fun setCropImage(uri: Uri) {
+    fun setCropImage(uri: Uri, fileNamePattern: String?) {
         // Delete Camera file after crop. Else there will be two image for the same action.
         // In case of Gallery Provider, we will get original image path, so we will not delete that.
         mCameraProvider?.delete()
@@ -146,7 +146,7 @@ class ImagePickerActivity : AppCompatActivity() {
         if (mCompressionProvider.isCompressionRequired(uri)) {
             mCompressionProvider.compress(uri)
         } else {
-            setResult(uri)
+            setResult(uri, fileNamePattern)
         }
     }
 
@@ -155,7 +155,7 @@ class ImagePickerActivity : AppCompatActivity() {
      *
      * @param uri Compressed image Uri
      */
-    fun setCompressedImage(uri: Uri) {
+    fun setCompressedImage(uri: Uri, fileNamePattern: String?) {
         // This is the case when Crop is not enabled
 
         // Delete Camera file after crop. Else there will be two image for the same action.
@@ -165,7 +165,7 @@ class ImagePickerActivity : AppCompatActivity() {
         // If crop file is not null, Delete it after crop
         mCropProvider.delete()
 
-        setResult(uri)
+        setResult(uri, fileNamePattern)
     }
 
     /**
@@ -173,10 +173,10 @@ class ImagePickerActivity : AppCompatActivity() {
      *
      * @param uri final image Uri
      */
-    private fun setResult(uri: Uri) {
+    private fun setResult(uri: Uri,  fileNamePattern: String?) {
         val intent = Intent()
         intent.data = uri
-        intent.putExtra(ImagePicker.EXTRA_FILE_PATH, FileUriUtils.getRealPath(this, uri))
+        intent.putExtra(ImagePicker.EXTRA_FILE_PATH, FileUriUtils.getRealPath(this, fileNamePattern, uri))
         setResult(Activity.RESULT_OK, intent)
         finish()
     }

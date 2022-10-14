@@ -25,10 +25,10 @@ import java.io.OutputStream
 
 object FileUriUtils {
 
-    fun getRealPath(context: Context, uri: Uri): String? {
+    fun getRealPath(context: Context, fileNamePattern: String?, uri: Uri): String? {
         var path = getPathFromLocalUri(context, uri)
         if (path == null) {
-            path = getPathFromRemoteUri(context, uri)
+            path = getPathFromRemoteUri(context, fileNamePattern, uri)
         }
         return path
     }
@@ -162,7 +162,7 @@ object FileUriUtils {
         return null
     }
 
-    private fun getPathFromRemoteUri(context: Context, uri: Uri): String? {
+    private fun getPathFromRemoteUri(context: Context, fileNamePattern: String?, uri: Uri): String? {
         // The code below is why Java now has try-with-resources and the Files utility.
         var file: File? = null
         var inputStream: InputStream? = null
@@ -171,7 +171,11 @@ object FileUriUtils {
         try {
             val extension = FileUtil.getImageExtension(uri)
             inputStream = context.contentResolver.openInputStream(uri)
-            file = FileUtil.getImageFile(context.cacheDir, extension)
+            file = FileUtil.getImageFile(
+                fileDir = context.cacheDir,
+                fileNamePattern = fileNamePattern,
+                extension = extension
+            )
             if (file == null) return null
             outputStream = FileOutputStream(file)
             if (inputStream != null) {

@@ -24,7 +24,7 @@ object FileUtil {
      * @return Image Info
      */
     @JvmStatic
-    fun getFileInfo(context: Context, uri: Uri?): String {
+    fun getFileInfo(context: Context, fileNamePattern: String?, uri: Uri?): String {
         if (uri == null) {
             return "Image not found"
         }
@@ -33,8 +33,8 @@ object FileUtil {
         val resolution = FileUtil.getImageResolution(context, uri)
 
         // File Path
-        val filePath = FileUriUtils.getRealPath(context, uri)
-        val document = FileUtil.getDocumentFile(context, uri) ?: return "Image not found"
+        val filePath = FileUriUtils.getRealPath(context, fileNamePattern, uri)
+        val document = FileUtil.getDocumentFile(context, fileNamePattern, uri) ?: return "Image not found"
 
         // Get Last Modified
         val sdf = SimpleDateFormat("dd/MM/yyyy hh:mm:ss a", Locale.getDefault())

@@ -104,7 +104,7 @@ object IntentUtils {
      * @return Intent
      */
     @JvmStatic
-    fun getUriViewIntent(context: Context, uri: Uri): Intent {
+    fun getUriViewIntent(context: Context, fileNamePattern: String?, uri: Uri): Intent {
         val intent = Intent(Intent.ACTION_VIEW)
         val authority =
             context.packageName + context.getString(R.string.image_picker_provider_authority_suffix)
@@ -113,7 +113,7 @@ object IntentUtils {
         val dataUri = if (file?.canRead() == true) {
             uri
         } else {
-            val filePath = FileUriUtils.getRealPath(context, uri)!!
+            val filePath = FileUriUtils.getRealPath(context, fileNamePattern, uri)!!
             FileProvider.getUriForFile(context, authority, File(filePath))
         }
 

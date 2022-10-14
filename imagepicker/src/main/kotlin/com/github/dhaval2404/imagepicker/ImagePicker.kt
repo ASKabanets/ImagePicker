@@ -34,6 +34,7 @@ open class ImagePicker {
         internal const val EXTRA_MAX_WIDTH = "extra.max_width"
         internal const val EXTRA_MAX_HEIGHT = "extra.max_height"
         internal const val EXTRA_SAVE_DIRECTORY = "extra.save_directory"
+        internal const val EXTRA_FILE_NAME_PATTERN = "extra.file_name_pattern"
 
         internal const val EXTRA_ERROR = "extra.error"
         internal const val EXTRA_FILE_PATH = "extra.file_path"
@@ -116,6 +117,11 @@ open class ImagePicker {
          * If null, Image will be stored in "{fileDir}/Images"
          */
         private var saveDir: String? = null
+
+        /**
+         * Custom file name pattern
+         * */
+        private var  fileNamePattern: String? = null
 
         /**
          * Call this while picking image for fragment.
@@ -216,6 +222,16 @@ open class ImagePicker {
          */
         fun saveDir(path: String): Builder {
             this.saveDir = path
+            return this
+        }
+
+        /**
+         * Provide file name pattern
+         *
+         * @param fileNamePattern File name without extension
+         */
+        fun setFileNamePattern(fileNamePattern: String?): Builder {
+            this.fileNamePattern = fileNamePattern
             return this
         }
 
@@ -349,6 +365,7 @@ open class ImagePicker {
                 putLong(EXTRA_IMAGE_MAX_SIZE, maxSize)
 
                 putString(EXTRA_SAVE_DIRECTORY, saveDir)
+                putString(EXTRA_FILE_NAME_PATTERN, fileNamePattern)
             }
         }
 
